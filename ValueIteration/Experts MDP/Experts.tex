@@ -114,20 +114,39 @@ In general, this is not possible, and, as in the standard experts setting, they 
 
 They define the regret of an algorithm $A$ as:
 \[
-Regret_T(A) = \max_{\pi} \left\{ \frac{1}{T} \mathbb{E} \left[ \sum_{t=1}^{T} r_t(s_t, a_t) \right] - \frac{1}{T} \mathbb{E} \left[ \sum_{t=1}^{T} r_t(s_t, \pi(s_t)) \right] \right\}
+Regret_T(A) = \max_{\pi} \left\{ \frac{1}{T} \mathbb{E} \left[ \sum_{t=1}^{T} r_t(s_t, \pi(s_t)) \right] - \frac{1}{T} \mathbb{E} \left[ \sum_{t=1}^{T} r_t(s_t, a_t) \right] \right\}
 \]
 where the maximum is taken over all fixed stationary policies $\pi(a|s)$.
 
-
-
+\medskip
 Great algorithms for this setting are the Follow-the-Perturbed-Leader (FPL) algorithm and MDP-E (MDP with Expert Advice) algorithm.
 The field of online MDPs was further developed and explored in the literature, however, in our case where we have 2 experts and binary predictions,
 we can define the problem as a simple MDP and solve it using standard MDP algorithms, by exploiting the structure of the problem and the limitations of the adversary.
 
 \section*{MDP for 2 Experts}
 
-We will define the Prediction from 2 Experts problem as a Markov Decision Process (MDP).
 
+We define for each time step $t$ the state space $S_t = \{ [ \mathbb{R}_1 ,  \mathbb{R}_2 ] : \mathbb{R}_1, \mathbb{R}_2 \in \mathbb{N}^+ , \mathbb{R}_1 + \mathbb{R}_2 = t \}$,  
+where $\mathbb{R}_1$ and $\mathbb{R}_2$ are the number of steps that were made during time steps $1, 2, \ldots, t$ by experts $1$ and $2$, respectively.
+
+For each time step $t$, the feasible actions are $A_t = \{p_t^1, p_t^2\}$, where $p_t^i$ is the prediction of expert $i$ at time $t$.
+
+\medskip
+
+The transition probabilities $P_{s,a}(\cdot)$ are deterministic, and depend on the action $a$ and the current state $s$.
+For each state $s_t = [ \mathbb{R}_1 ,  \mathbb{R}_2 ]$, and action If $a_t = p_t^1$, then $s_{t+1} = [ \mathbb{R}_1 + 1 ,  \mathbb{R}_2 ]$ otherwise $[ \mathbb{R}_1 ,  \mathbb{R}_2 + 1 ]$.
+
+
+\bigskip
+
+MDP $M_e$ is a tuple $(S, A, P_{s,a}(\cdot) , R_s(\cdot), \gamma)$, where:
+\begin{itemize}
+    \item $S = \{ [ \mathbb{R}_1 ,  \mathbb{R}_2 ] : \mathbb{R}_1, \mathbb{R}_2 \in \mathbb{N}^+ \}$ 
+    \item $A =  \cup_{t=1}^T \{p_t^1, p_t^2\}$ 
+    \item $P_{s,a}(\cdot)$ is the transition probability function, $P_{s,a}(s') = \mathbb{P}(s_{t+1} = s' | s_t = s, a_t = a)$.
+    \item $R_s(\cdot)$ is the reward function, $R_s(a) = \mathbb{E}[r_{t+1} | s_t = s, a_t = a]$.
+    \item $\gamma$ is the discount factor.
+\end{itemize}
 
 
 \end{document}
